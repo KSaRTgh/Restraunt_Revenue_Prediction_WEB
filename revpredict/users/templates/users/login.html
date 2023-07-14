@@ -1,0 +1,20 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Sign in{% endblock title %}
+{% block content %}
+<form method="POST" novalidate>
+	{% csrf_token %}
+	<h2>Login</h2>
+	<p>
+		{% for field in form %}
+		{{ field.label_tag }} <br>{{ field }}<br>
+		{% endfor %}
+	</p>
+
+
+	<input type="submit" value="Login" />
+	<p>Don't have an account? <a href="{%url 'register' %}">Register</a></p>
+
+</form>
+
+{% endblock content%}

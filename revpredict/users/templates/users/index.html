@@ -1,0 +1,17 @@
+{% extends 'users/base.html' %}
+
+{% block title %}Homepage{% endblock title %}
+{% block content %}
+<form>
+    <h2>Index</h2>
+    <p>This is homepage</p>
+    {%if not request.user.is_authenticated %}
+        <p>You are not authorized</p>
+    {% else %}
+        <p> Authorized as {{ request.user.username | title }}</p>
+    {% endif %}
+    <a href="{% url 'dataprocessing' %}">Predict</a><br>
+    <a href="{% url 'add-to-db' %}">Add to Database</a>
+</form>
+
+{% endblock content%}
