@@ -1,9 +1,11 @@
 {% extends 'dataprocessing/base.html' %}
-{% block title %}Dataprocessing{% endblock title %}
+{% block title %}Add to DB{% endblock title %}
 {% block content %}
-<form method="POST" action="{% url 'add-to-db' %}">
+<form method="POST"  novalidate>
 	{% csrf_token %}
 	<h2>Add to DB</h2>
+	{% block raw %}
+	{% endblock raw %}
 
 	{% for field in form %}
 

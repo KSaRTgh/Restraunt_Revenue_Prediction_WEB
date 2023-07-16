@@ -3,15 +3,16 @@
 {% block title %}Homepage{% endblock title %}
 {% block content %}
 <form>
-    <h2>Index</h2>
-    <p>This is homepage</p>
+    <h2>Restraunt revenue prediction</h2>
     {%if not request.user.is_authenticated %}
         <p>You are not authorized</p>
-    {% else %}
-        <p> Authorized as {{ request.user.username | title }}</p>
     {% endif %}
-    <a href="{% url 'dataprocessing' %}">Predict</a><br>
-    <a href="{% url 'add-to-db' %}">Add to Database</a>
+    <a href="{% url 'read-from-csv' %}">Read from CSV file</a><br>
+    <a href="{% url 'make-predictions' %}">Predict</a><br>
+    <a href="{% url 'add-to-db' %}">Add to Database</a><br>
+    <a href="{% url 'add-raw-to-db' %}">Add to raw Database</a><br>
+
+
 </form>
 
 {% endblock content%}

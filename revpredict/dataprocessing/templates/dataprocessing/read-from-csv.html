@@ -1,0 +1,22 @@
+{% extends 'dataprocessing/base.html' %}
+{% load render_table from django_tables2 %}
+{% block title %}Load from CSV{% endblock title %}
+{% block content %}
+
+
+<form method="POST" novalidate enctype="multipart/form-data">
+	{% csrf_token %}
+	<h2>Choose the file to load from</h2>
+
+
+	{{ form }}
+
+	<br><p><input type="submit" value="Load" /></p>
+
+	{% if method_post %}
+	<h2>Loaded data</h2>
+	{% render_table table %}
+
+	{% endif %}
+</form>
+{% endblock content%}

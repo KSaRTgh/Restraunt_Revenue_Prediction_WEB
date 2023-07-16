@@ -10,7 +10,7 @@ function toggle(source) {
         checkboxes[i].checked = source.checked;
 }
 </script>
-<form method="POST" novalidate>
+<form method="POST" novalidate enctype="multipart/form-data">
 	{% csrf_token %}
 	<h2>Choose data to predict</h2>
 
