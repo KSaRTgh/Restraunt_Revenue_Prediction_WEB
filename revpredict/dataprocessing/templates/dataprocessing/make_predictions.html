@@ -10,6 +10,13 @@ function toggle(source) {
         checkboxes[i].checked = source.checked;
 }
 </script>
+<script language="JavaScript">
+function toggle2(source) {
+    checkboxes = document.getElementsByName('selection2');
+    for(var i in checkboxes)
+        checkboxes[i].checked = source.checked;
+}
+</script>
 <form method="POST" novalidate enctype="multipart/form-data">
 	{% csrf_token %}
 	<h2>Choose data to predict</h2>

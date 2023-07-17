@@ -34,6 +34,8 @@ class db_view_rawTable(tables.Table):
 
 class predictions_Table(tables.Table):
     user = tables.Column(visible=False)
+    selection2 = tables.CheckBoxColumn(accessor="pk", attrs={"th__input": {"onclick": "toggle2(this)"}},
+                                      orderable=False)
     Open_Date = tables.Column(accessor='raw.Open_Date')
     City_Group = tables.Column(accessor='raw.City_Group')
     Type = tables.Column(accessor='raw.Type')
