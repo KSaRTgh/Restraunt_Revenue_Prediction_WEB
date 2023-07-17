@@ -7,6 +7,7 @@ class Profile(models.Model):
 
     avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
     bio = models.TextField()
+    predictions_num = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username

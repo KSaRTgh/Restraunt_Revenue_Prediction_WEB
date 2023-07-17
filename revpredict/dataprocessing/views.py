@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, reverse
 from django_tables2 import RequestConfig
 from django.contrib.auth.decorators import login_required
 import sklearn
+from django_tables2.export import TableExport
 from joblib import dump, load
 from .forms import *
 from .preprocessing import *
@@ -82,12 +83,11 @@ def read_from_csv(request):
                     messages.warning(request, preprocessed_data)
                     return redirect('read-from-csv')
 
-                data_table = RawDataTable(added_data)
                 context ={
                     'form': load_form,
                     'file': file,
                     'method_post': True,
-                    'table': data_table
+                    #'table': data_table
                 }
 
                 messages.success(request, f'Successfully loaded from {file.name}')
@@ -107,23 +107,41 @@ def make_prediction(request):
         RequestConfig(request).configure(db_view_table)
         method_post = False
         if request.method == 'POST':
-            method_post= True
-            RequestConfig(request).configure(db_view_table)
+            if 'predictt' in request.POST:
+                method_post= True
+                RequestConfig(request).configure(db_view_table)
 
-            pks = request.POST.getlist("selection")
-            selected_objects = Data.objects.filter(raw_id__in=pks)
+                pks = request.POST.getlist("selection")
+                selected_objects = Data.objects.filter(raw_id__in=pks)
 
-            #work with model
-            make_prediction_func(selected_objects)
+                #work with model
+                make_prediction_func(selected_objects)
 
-            predictions_table = predictions_Table(selected_objects)
-            return render(request, 'dataprocessing/make_predictions.html',
-                          {'table': db_view_table, 'predictions_table': predictions_table, 'method_post': method_post})
+                request.user.profile.predictions_num += len(selected_objects)
+                request.user.profile.save()
+
+                predictions_table = predictions_Table(selected_objects)
+                return render(request, 'dataprocessing/make_predictions.html',
+                              {'table': db_view_table, 'predictions_table': predictions_table,
+                               'method_post': method_post})
+
+            if 'savee' in request.POST:
+                pks2 = request.POST.getlist("selection2")
+                selected2_objects = Data.objects.filter(pk__in=pks2)
+
+                for obj in selected2_objects:
+                    obj.to_save = True
+                    obj.save()
+
+                response = redirect('save-to-csv')
+                response['Location'] += '?_export=csv'
+                return response
 
         return render(request, 'dataprocessing/make_predictions.html', {'table': db_view_table, 'method_post': method_post})
     except Exception as e:
         logger.exception("Exception occured in make_prediction view")
-#TODO: relocate to preprocessing.py
+
+
 def make_prediction_func(selected_objects):
 
     df = pd.DataFrame(list(selected_objects.values('City', 'Month', 'Year', 'City_Group_BigCities',
@@ -138,3 +156,26 @@ def make_prediction_func(selected_objects):
     for i in range(len(selected_objects)):
         selected_objects[i].prediction = predicts[i]
         selected_objects[i].save()
+
+
+@login_required
+def save_to_csv(request):
+    selected2_objects = Data.objects.filter(to_save=True)
+    table = predictions_Table(selected2_objects)
+    RequestConfig(request).configure(table)
+
+    export_format = request.GET.get("_export", None)
+    if TableExport.is_valid_format(export_format):
+        exporter = TableExport(export_format, table)
+
+        messages.success(request, f"{len(selected2_objects)} rows were successfully saved to file")
+        logger.info(f"{len(selected2_objects)} rows were successfully saved to file")
+
+        for obj in selected2_objects:
+           obj.to_save = False
+           obj.save()
+
+        return exporter.response(f"table.{export_format}")
+    messages.warning(request, "Error while saving file")
+    logger.error("Error while saving file")
+    return redirect('home')

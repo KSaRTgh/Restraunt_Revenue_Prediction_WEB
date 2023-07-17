@@ -24,6 +24,7 @@
 
                     {%if request.user.is_authenticated %}
   			            <span class="nav-item nav-link"> {{ request.user.username | title }}</span>
+                        <span class="nav-item nav-link">predicions: {{ request.user.profile.predictions_num | title }}</span>
   			            <a href="{% url 'about' %}" class="nav-item nav-link">Profile</a>
 				        <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
 		            {%else%}

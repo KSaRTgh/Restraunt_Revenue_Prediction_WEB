@@ -10,24 +10,35 @@ function toggle(source) {
         checkboxes[i].checked = source.checked;
 }
 </script>
+
 <script language="JavaScript">
 function toggle2(source) {
-    checkboxes = document.getElementsByName('selection2');
-    for(var i in checkboxes)
-        checkboxes[i].checked = source.checked;
-}
+checkboxes = document.getElementsByName('selection2');
+for(var i in checkboxes)
+	checkboxes[i].checked = source.checked;}
 </script>
-<form method="POST" novalidate enctype="multipart/form-data">
+
+	<form method="POST" novalidate enctype="multipart/form-data">
+		{% csrf_token %}
+		<h2>Choose data to predict</h2>
+
+		{% render_table table %}
+
+		<br><p><input type="submit" name="predictt" value="Predict" /></p>
+
+
+	</form>
+
+{% if method_post %}
+
+	<form method="POST" novalidate enctype="multipart/form-data">
 	{% csrf_token %}
-	<h2>Choose data to predict</h2>
 
-	{% render_table table %}
-
-	<br><p><input type="submit" value="Predict" /></p>
-
-	{% if method_post %}
 	<h2>Predictions</h2>
 	{% render_table predictions_table %}
-	{% endif %}
-</form>
+
+	<br><p><input type="submit" name="savee" value="Save" /></p>
+	</form>
+
+{% endif %}
 {% endblock content%}

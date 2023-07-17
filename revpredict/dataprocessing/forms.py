@@ -33,13 +33,21 @@ class db_view_rawTable(tables.Table):
 
 
 class predictions_Table(tables.Table):
-    user = tables.Column(visible=False)
+    user = tables.Column(visible=False, exclude_from_export=True)
     selection2 = tables.CheckBoxColumn(accessor="pk", attrs={"th__input": {"onclick": "toggle2(this)"}},
-                                      orderable=False)
+                                      orderable=False, exclude_from_export=True)
     Open_Date = tables.Column(accessor='raw.Open_Date')
     City_Group = tables.Column(accessor='raw.City_Group')
     Type = tables.Column(accessor='raw.Type')
     City = tables.Column(accessor='raw.City')
+    P2 = tables.Column(visible=False)
+    P6 = tables.Column(visible=False)
+    P28 = tables.Column(visible=False)
+    P22 = tables.Column(visible=False)
+    P27 = tables.Column(visible=False)
+    P23 = tables.Column(visible=False)
+    raw_id = tables.Column(verbose_name='Id')
+
 
     class Meta:
         model = Data
@@ -51,10 +59,3 @@ class predictions_Table(tables.Table):
 
 class load_csvForm(forms.Form):
     file = forms.FileField()
-
-
-class RawDataTable(tables.Table):
-    class Meta:
-        model = RawData
-        #fields = ['user', 'City', 'P2', 'revenue']
-        fields = ['original_id','Open_Date','City','City_Group','Type','P2', 'P6', 'P28', 'P27', 'P22','P23','revenue']

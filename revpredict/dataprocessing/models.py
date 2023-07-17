@@ -81,6 +81,7 @@ class Data(models.Model):
     P23 = models.FloatField(blank=False)
     # is_preprocessed = models.BooleanField(default=False)
     prediction = models.FloatField(default=None, null=True)
+    to_save = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.pk)
